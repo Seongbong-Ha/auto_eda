@@ -1,4 +1,5 @@
 import { state } from "../store.js";
+import { setupChat } from "./chat.js";
 
 const pageMain = document.getElementById("pageMain");
 
@@ -77,8 +78,24 @@ export function renderReport() {
         <p class="section-label">AI 인사이트</p>
         <div class="insights" id="insightsBody"></div>
       </div>
+
+      <div class="chat-section">
+        <p class="section-label">에이전트와 대화하기</p>
+        ${uploadResult.session_id ? `
+          <div class="chat-messages" id="chatMessages"></div>
+          <form class="chat-form" id="chatForm">
+            <input class="chat-input" id="chatInput" type="text"
+              placeholder="데이터에 대해 질문해 보세요..." autocomplete="off">
+            <button class="btn btn-primary" id="chatSend" type="submit">전송</button>
+          </form>
+        ` : `<p class="chat-disabled">샘플 데이터는 채팅을 지원하지 않습니다.</p>`}
+      </div>
     </section>
   `;
 
   document.getElementById("insightsBody").innerHTML = window.marked.parse(report.report_md);
+
+  if (uploadResult.session_id) {
+    setupChat(uploadResult.session_id);
+  }
 }

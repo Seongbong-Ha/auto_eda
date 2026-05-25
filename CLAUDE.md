@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 
-CSV 파일을 업로드하면 Claude API가 자동으로 EDA를 수행하고 한국어 인사이트 리포트를 생성하는 웹앱.
+CSV 파일을 업로드하면 Gemini API가 자동으로 EDA를 수행하고 한국어 인사이트 리포트를 생성하는 웹앱.
 
 ## 기술 스택
 
@@ -19,13 +19,13 @@ CSV 파일을 업로드하면 Claude API가 자동으로 EDA를 수행하고 한
 auto-eda/
 ├── main.py              # FastAPI 앱 진입점, 라우터 정의
 ├── analyzer.py          # pandas 기반 통계 계산
-├── claude_client.py     # Claude API 호출 및 프롬프트 관리
+├── gemini_client.py     # Gemini API 호출 및 프롬프트 관리
 ├── static/
 │   ├── index.html
 │   ├── style.css
 │   └── app.js
 ├── pyproject.toml
-├── .env                 # ANTHROPIC_API_KEY (커밋 금지)
+├── .env                 # GEMINI_API_KEY (커밋 금지)
 └── .env.example         # 환경변수 템플릿
 ```
 
@@ -48,7 +48,7 @@ uv add <package>
 |--------|----------|------|
 | GET | `/` | 웹 UI 서빙 |
 | POST | `/upload` | CSV 업로드 및 기초 통계 반환 |
-| POST | `/analyze` | Claude API 호출 → EDA 리포트 반환 |
+| POST | `/analyze` | Gemini API 호출 → EDA 리포트 반환 |
 | GET | `/download/report` | 마크다운 리포트 다운로드 |
 
 ## 주요 규칙
@@ -63,7 +63,7 @@ uv add <package>
 - CSV 업로드 및 파싱 (UTF-8, EUC-KR 자동 감지, 최대 50MB)
 - 컬럼 타입 자동 분류 (수치형 / 범주형 / 날짜형)
 - 기초 통계 자동 계산
-- Claude API → 한국어 EDA 리포트 생성
+- Gemini API → 한국어 EDA 리포트 생성
 - 리포트 화면 표시 및 마크다운 다운로드
 
 

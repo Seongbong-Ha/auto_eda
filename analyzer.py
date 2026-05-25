@@ -52,7 +52,7 @@ def _classify_column(series: pd.Series) -> str:
     return "categorical"
 
 
-def compute_stats(file_bytes: bytes) -> dict:
+def compute_stats(file_bytes: bytes) -> tuple[dict, pd.DataFrame]:
     df = parse_csv(file_bytes)
 
     # 날짜형으로 분류된 컬럼은 변환 시도
@@ -105,7 +105,7 @@ def compute_stats(file_bytes: bytes) -> dict:
 
         columns[col] = {"type": col_type, "stats": stats}
 
-    return {"overview": overview, "columns": columns}
+    return {"overview": overview, "columns": columns}, df
 
 
 def _safe_float(value) -> float | None:
