@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Claude Code
+.claude/settings.local.json
+
+# Auto EDA — project specific
+uploads/
+reports/
+*.csv
+
+# macOS
+.DS_Store
