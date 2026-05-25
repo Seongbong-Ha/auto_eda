@@ -30,7 +30,7 @@ export function renderAnalyzing() {
     <div class="analyzing">
       <div class="spinner-lg"></div>
       <div>
-        <h2 class="analyzing-title">Claude가 데이터를 분석하고 있습니다…</h2>
+        <h2 class="analyzing-title">Gemini가 데이터를 분석하고 있습니다…</h2>
         <p class="analyzing-sub">${state.uploadResult?.filename ?? state.file?.name ?? ""}</p>
       </div>
       <div class="steps">${stepsHtml}</div>

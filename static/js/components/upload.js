@@ -17,7 +17,7 @@ export function renderUpload() {
     <section class="upload">
       <div>
         <h1 class="upload-title">CSV 한 번에 분석합니다</h1>
-        <p class="upload-subtitle">파일을 올리면 Claude가 통계와 인사이트를 한국어로 정리해 드립니다.</p>
+        <p class="upload-subtitle">파일을 올리면 Gemini가 통계와 인사이트를 한국어로 정리해 드립니다.</p>
       </div>
 
       ${error ? `<div class="error-banner">${IC.alertCircle}<span>${error}</span></div>` : ""}
