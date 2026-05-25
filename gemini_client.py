@@ -7,7 +7,7 @@ from google import genai
 load_dotenv()
 
 _client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-MODEL = "gemini-2.0-flash"
+MODEL = "gemini-2.5-flash"
 
 
 def generate_eda_report(filename: str, stats: dict) -> str:
