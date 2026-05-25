@@ -9,10 +9,22 @@ def parse_csv(file_bytes: bytes) -> pd.DataFrame:
     for encoding in ("utf-8", "euc-kr", "cp949"):
         try:
             text = file_bytes.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+            
+        # 1차 시도: csv.Sniffer를 이용한 구분자 및 형식 감지
+        try:
             dialect = csv.Sniffer().sniff(text[:4096], delimiters=",;\t|")
             return pd.read_csv(io.StringIO(text), dialect=dialect)
-        except (UnicodeDecodeError, csv.Error):
-            continue
+        except csv.Error:
+            # 2차 시도: Sniffer 실패 시 pandas 엔진의 자동 구분자 감지 또는 기본 쉼표 폴백
+            try:
+                return pd.read_csv(io.StringIO(text), sep=None, engine="python")
+            except Exception:
+                try:
+                    return pd.read_csv(io.StringIO(text), sep=",")
+                except Exception:
+                    continue
     raise ValueError("지원하지 않는 인코딩이거나 올바른 CSV 파일이 아닙니다.")
 
 
@@ -23,6 +35,15 @@ def _classify_column(series: pd.Series) -> str:
         return "datetime"
     # 문자열 컬럼 중 날짜 패턴 감지 (샘플 20개)
     sample = series.dropna().head(20).astype(str)
+    if sample.empty:
+        return "categorical"
+        
+    # 단순 숫자로만 구성되었거나 연도 형태(4자리 이하)의 단순 값은 날짜 판정에서 제외 (오탐지 방지)
+    # 예: ID "100234", 연도 "2025" 등
+    is_pure_digit = sample.str.match(r"^\d+$").all()
+    if is_pure_digit:
+        return "categorical"
+        
     try:
         pd.to_datetime(sample, format="mixed")
         return "datetime"

@@ -3,17 +3,45 @@ import os
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai.errors import APIError
 
 load_dotenv()
 
-_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL = "gemini-2.5-flash"
 
 
+def _get_client() -> genai.Client:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key or api_key.strip() == "":
+        raise ValueError("GEMINI_API_KEY 환경 변수가 설정되지 않았습니다. .env 파일을 확인해 주세요.")
+    return genai.Client(api_key=api_key)
+
+
 def generate_eda_report(filename: str, stats: dict) -> str:
+    client = _get_client()
     prompt = _build_prompt(filename, stats)
-    response = _client.models.generate_content(model=MODEL, contents=prompt)
-    return response.text
+    
+    system_instruction = (
+        "당신은 전문 데이터 분석가이자 AI 어시스턴트입니다. "
+        "제공된 데이터 요약을 기반으로 전문적이고 차분한 톤의 한국어 마크다운 리포트를 작성합니다. "
+        "인사말이나 맺음말(예: '안녕하세요', '도움이 되었길 바랍니다')은 절대 포함하지 않고, "
+        "오직 규정된 마크다운 형식의 리포트 본문만을 직접적이고 간결하게 반환하십시오."
+    )
+    
+    try:
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt,
+            config={
+                "system_instruction": system_instruction,
+                "temperature": 0.2,
+            }
+        )
+        return response.text
+    except APIError as e:
+        raise RuntimeError(f"Gemini API 호출 중 오류가 발생했습니다: {e.message}")
+    except Exception as e:
+        raise RuntimeError(f"데이터 분석 중 예상치 못한 오류가 발생했습니다: {str(e)}")
 
 
 def _build_prompt(filename: str, stats: dict) -> str:
