@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from analyzer import compute_stats
+from gemini_client import generate_eda_report
 
 app = FastAPI(title="Auto EDA")
 
@@ -30,5 +31,8 @@ async def upload(file: UploadFile = File(...)):
 
 @app.post("/analyze")
 async def analyze(body: dict):
-    # TODO: claude_client.py 구현 후 연동
-    return {"report_md": "## 분석 준비 중\n\nClaude 연동이 완료되면 여기에 인사이트가 표시됩니다."}
+    try:
+        report_md = generate_eda_report(body["filename"], body["stats"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {"report_md": report_md}

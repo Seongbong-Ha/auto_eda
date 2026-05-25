@@ -9,7 +9,7 @@ CSV 파일을 업로드하면 Claude API가 자동으로 EDA를 수행하고 한
 - **런타임:** Python 3.11+
 - **웹 서버:** FastAPI + Uvicorn
 - **프론트엔드:** HTML/CSS/JS (프레임워크 없음)
-- **AI:** Anthropic Claude API (`claude-sonnet-4-5`)
+- **AI:** Google Gemini API (`gemini-2.0-flash`, 무료 티어)
 - **데이터 처리:** pandas, numpy
 - **패키지 관리:** uv
 
