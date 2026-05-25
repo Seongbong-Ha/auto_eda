@@ -1,6 +1,8 @@
-def main():
-    print("Hello from auto-eda!")
+from fastapi import FastAPI
+
+app = FastAPI(title="Auto EDA")
 
 
-if __name__ == "__main__":
-    main()
+@app.get("/")
+def root():
+    return {"status": "ok", "message": "Auto EDA 서버 정상 작동 중"}
