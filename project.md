@@ -1,100 +1,132 @@
-# Auto EDA — 프로젝트 기획서 초안
+# EDA Copilot — Agent 업그레이드 기획서
 
-**작성일** 2026-05-25 | **버전** v0.2
-
----
-
-## 1. 프로젝트 개요
-
-CSV 파일을 업로드하면 Claude API가 자동으로 탐색적 데이터 분석(EDA)을 수행하고, 사람이 읽을 수 있는 인사이트 리포트를 생성하는 웹 앱.
+**작성일** 2026-05-25 | **버전** v0.3 | **이전** auto_eda v0.2
 
 ---
 
-## 2. 기술 스택
+## 0. 변경 요약
+
+**v0.2 (현재)** — CSV 업로드 → 단발 EDA 리포트 생성기
+**v0.3 (목표)** — CSV 업로드 → **대화형 데이터 분석 에이전트**
+
+핵심 전환: "한 번 분석하고 끝나는 도구" → "분석가처럼 대화하며 함께 데이터를 파고드는 에이전트"
+
+---
+
+## 1. 프로젝트 포지셔닝
 
 | 항목 | 내용 |
 |------|------|
-| 개발 도구 | Claude Code |
-| 런타임 | Python 3.11+ |
-| 웹 서버 | FastAPI + Uvicorn |
-| 프론트엔드 | HTML/CSS/JS (정적 파일, 프레임워크 없음) |
-| AI | Anthropic Claude API (claude-sonnet-4) |
-| 데이터 처리 | pandas, numpy |
-| 패키지 관리 | uv |
+| 한 줄 정의 | 데이터를 업로드하면 함께 탐색해주는 AI 분석 파트너 |
+| 차별점 | 단발 리포트가 아니라 **multi-turn 대화 + 도구 실행** |
+| 타겟 어필 | 게임/IT 기업의 DA, DE, AX 직군 |
+| 키워드 | AI Agent, Function Calling, AX, Data Analysis |
+
+> 리네이밍 후보: `EDA Copilot` / `Data Analyst Agent` / `Insight Agent`
 
 ---
 
-## 3. 입력 파일 사양
+## 2. 기술 스택 (변경분)
 
-| 항목 | 내용 |
-|------|------|
-| 지원 형식 | `.csv` |
-| 인코딩 | UTF-8, EUC-KR 자동 감지 |
-| 최대 파일 크기 | 50MB |
-| 구분자 | 쉼표(,) 기본, 자동 감지 지원 |
-
----
-
-## 4. 출력물 형식
-
-**메인 리포트 (웹 화면 표시)**
-- 데이터 개요: 행/열 수, 결측률, 메모리 사용량
-- 컬럼별 요약: 수치형(min/max/mean/std), 범주형(유니크 수/상위 빈도)
-- AI 인사이트: 데이터 성격 추론, 이상값, 품질 이슈, 다음 분석 단계 제안
-
-**다운로드 (선택)**
-- `report.md` — 마크다운 리포트
+| 항목 | v0.2 | v0.3 |
+|------|------|------|
+| 런타임 | Python 3.11+ | 동일 |
+| 웹 서버 | FastAPI | 동일 |
+| AI | Gemini 단발 호출 | **Gemini + Function Calling** |
+| 세션 관리 | 없음 | **인메모리 세션** (Phase 1) → SQLite (Phase 2) |
+| 시각화 | 없음 | **matplotlib → base64 PNG** |
+| 프론트엔드 | 정적 HTML/JS | 동일 (채팅 UI 추가) |
 
 ---
 
-## 5. API 설계
+## 3. Agent 아키텍처
 
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| GET | `/` | 웹 UI 서빙 |
-| POST | `/upload` | CSV 업로드 및 기초 통계 반환 |
-| POST | `/analyze` | Claude API 호출 → EDA 리포트 반환 |
-| GET | `/download/report` | 마크다운 리포트 다운로드 |
-
----
-
-## 6. 핵심 기능 범위 (MVP)
-
-1. CSV 업로드 및 파싱
-2. 컬럼 타입 자동 분류 (수치형 / 범주형 / 날짜형)
-3. 기초 통계 자동 계산
-4. Claude API 호출 → 한국어 EDA 리포트 생성
-5. 리포트 화면 표시 및 마크다운 다운로드
-
-**MVP 제외 (추후)**
-- Excel(.xlsx) 입력 지원
-- 시각화 차트 자동 생성
-- 다중 파일 비교 분석
+```
+[User]
+  ↓ chat message
+[FastAPI /chat endpoint]
+  ↓
+[Agent Loop]
+  ├─ Gemini API (with tool definitions)
+  ├─ Tool 호출 판단
+  └─ Tool 실행 → 결과를 다시 Gemini에 전달 → 최종 응답
+       │
+       ├─ compute_basic_stats()
+       ├─ detect_outliers()
+       ├─ compute_correlation()
+       ├─ generate_chart()
+       ├─ filter_data()
+       └─ get_column_distribution()
+```
 
 ---
 
-## 7. 디렉토리 구조 (예상)
+## 4. Agent 도구 정의 (Function Calling)
+
+| 함수 | 설명 | 반환 |
+|------|------|------|
+| `compute_basic_stats(columns)` | 지정 컬럼의 기초 통계 | JSON (min/max/mean/std) |
+| `detect_outliers(column, method)` | IQR/Z-score 이상값 탐지 | 인덱스 + 값 리스트 |
+| `compute_correlation(columns)` | 컬럼 간 상관관계 | 상관계수 매트릭스 |
+| `generate_chart(type, x, y)` | 히스토그램/산점도/박스플롯/라인 | base64 PNG |
+| `filter_data(condition)` | 조건 필터링 후 통계 | 필터된 통계 |
+| `get_column_distribution(col)` | 범주형 분포, 수치형 히스토그램 | JSON + 차트 |
+
+**핵심 원칙**
+- 함수는 **결정적(deterministic)** 이고 작게 — AI가 조합해서 사용
+- 모든 함수는 세션의 DataFrame을 참조
+- 에러는 자연어로 반환 (AI가 다음 행동 결정)
+
+---
+
+## 5. API 엔드포인트 (변경)
+
+| Method | Endpoint | 설명 | 변경 |
+|--------|----------|------|------|
+| GET | `/` | 웹 UI | 유지 |
+| POST | `/upload` | CSV 업로드 + 세션 생성 | 세션 ID 반환 추가 |
+| POST | `/chat` | **대화 메시지 전송, 도구 실행** | **신규** |
+| GET | `/session/{id}/history` | 대화 히스토리 | **신규** |
+| POST | `/analyze` | (deprecated, 호환용 유지) | 유지 |
+
+---
+
+## 6. 디렉토리 구조 (변경)
 
 ```
 auto-eda/
-├── main.py              # FastAPI 앱 진입점, 라우터 정의
-├── analyzer.py          # pandas 기반 통계 계산
-├── claude_client.py     # Claude API 호출 및 프롬프트 관리
+├── main.py                  # FastAPI 진입점 + /chat 라우터
+├── analyzer.py              # 기존 통계 계산 (도구로 재사용)
+├── agent/
+│   ├── __init__.py
+│   ├── loop.py              # Agent 메인 루프 (도구 호출 사이클)
+│   ├── tools.py             # Function Calling 도구 정의
+│   ├── session.py           # 세션 관리 (DataFrame 보관)
+│   └── prompts.py           # 시스템 프롬프트
+├── gemini_client.py         # Function Calling 지원으로 리팩토링
 ├── static/
-│   ├── index.html       # 웹 UI
-│   ├── style.css
-│   └── app.js           # fetch API로 백엔드 호출
-├── pyproject.toml
-└── .env                 # ANTHROPIC_API_KEY
+│   ├── index.html           # 채팅 UI 추가
+│   ├── chat.js              # 메시지 송수신, 차트 렌더링
+│   └── style.css
+└── samples/                 # 데모용 CSV (PUBG, 게임 로그 등)
 ```
 
 ---
 
-## 8. 개발 순서
 
-1. FastAPI 프로젝트 세팅 (`pyproject.toml`, `.env`)
-2. `analyzer.py` — CSV 파싱 + 통계 계산 로직
-3. `main.py` — `/upload`, `/analyze` 엔드포인트 구현
-4. `claude_client.py` — API 연동 + 프롬프트 작성
-5. `static/` — HTML/JS UI 구현 (fetch로 API 연동)
-6. 통합 테스트 (샘플 CSV 3종 이상)
+## 8. 유지 vs 재작성 정리
+
+**유지**
+- `analyzer.py` 전체 로직 (도구 내부에서 그대로 호출)
+- `main.py`의 `/upload`, 예외 핸들러
+- `static/` 기본 레이아웃, CSS
+- README, LICENSE, 환경 설정
+
+**리팩토링**
+- `gemini_client.py` → Function Calling 지원하도록 변경
+- `static/index.html` → 채팅 UI로 확장
+
+**신규**
+- `agent/` 패키지 전체
+- 채팅 프론트엔드 JS
+- 샘플 데이터셋
