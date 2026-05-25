@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<title>Column table</title>
+<link rel="stylesheet" href="preview.css">
+<style>
+  body { background:#fafafa }
+  table { width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;font-size:13px }
+  th, td { padding:10px 14px;text-align:left;border-bottom:1px solid #f1f3f5;font-variant-numeric:tabular-nums }
+  tr:last-child td { border-bottom:0 }
+  th { background:#fafafa;color:#6b7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em }
+  td.col-name { font-family:var(--font-mono);color:#111827 }
+  td.col-stats { color:#4b5563;font-family:var(--font-mono);font-size:12px }
+  td.col-miss { color:#9ca3af;font-family:var(--font-mono);font-size:12px;text-align:right }
+  .badge { display:inline-flex;align-items:center;font-family:var(--font-sans);font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px }
+  .b-num { background:#dbeafe; color:#1d4ed8 }
+  .b-cat { background:#dcfce7; color:#15803d }
+  .b-dat { background:#ede9fe; color:#7c3aed }
+</style>
+</head><body>
+<div class="card-frame">
+  <table>
+    <thead><tr>
+      <th>컬럼</th><th>타입</th><th>주요 통계</th><th style="text-align:right">결측</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="col-name">order_id</td>
+        <td><span class="badge b-num">수치형</span></td>
+        <td class="col-stats">min 1 · max 12,489 · mean 6,244.3</td>
+        <td class="col-miss">0</td>
+      </tr>
+      <tr style="background:#fafafa">
+        <td class="col-name">region</td>
+        <td><span class="badge b-cat">범주형</span></td>
+        <td class="col-stats">unique 6 · top 서울, 경기, 부산</td>
+        <td class="col-miss">12</td>
+      </tr>
+      <tr>
+        <td class="col-name">created_at</td>
+        <td><span class="badge b-dat">날짜형</span></td>
+        <td class="col-stats">2024-01-03 → 2025-12-31</td>
+        <td class="col-miss">0</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</body></html>

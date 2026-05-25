@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<title>Colors — Type Badges</title>
+<link rel="stylesheet" href="preview.css">
+<style>
+  .badge { display:inline-flex;align-items:center;font-family:var(--font-sans);font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px }
+  .b-num { background:#dbeafe; color:#1d4ed8 }
+  .b-cat { background:#dcfce7; color:#15803d }
+  .b-dat { background:#ede9fe; color:#7c3aed }
+  .cell { display:flex;align-items:center;gap:14px }
+  .swatch-pair { display:flex;align-items:center;gap:0 }
+  .swatch-pair > div { width:24px;height:24px;border:1px solid rgba(17,24,39,0.06) }
+  .swatch-pair > div:first-child { border-radius:4px 0 0 4px }
+  .swatch-pair > div:last-child { border-radius:0 4px 4px 0 }
+</style>
+</head><body>
+<div class="card-frame">
+  <div class="col" style="gap:14px">
+    <div class="cell">
+      <span class="badge b-num">수치형</span>
+      <span class="badge b-num">numeric</span>
+      <div class="swatch-pair"><div style="background:#dbeafe"></div><div style="background:#1d4ed8"></div></div>
+      <div class="token-value">#dbeafe · #1d4ed8</div>
+    </div>
+    <div class="cell">
+      <span class="badge b-cat">범주형</span>
+      <span class="badge b-cat">categorical</span>
+      <div class="swatch-pair"><div style="background:#dcfce7"></div><div style="background:#15803d"></div></div>
+      <div class="token-value">#dcfce7 · #15803d</div>
+    </div>
+    <div class="cell">
+      <span class="badge b-dat">날짜형</span>
+      <span class="badge b-dat">datetime</span>
+      <div class="swatch-pair"><div style="background:#ede9fe"></div><div style="background:#7c3aed"></div></div>
+      <div class="token-value">#ede9fe · #7c3aed</div>
+    </div>
+  </div>
+  <div class="token-label" style="margin-top:2px">Used only on column-type badges in the report — nowhere else in the chrome.</div>
+</div>
+</body></html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<title>Dropzone states</title>
+<link rel="stylesheet" href="preview.css">
+<style>
+  body { background:#fafafa }
+  .dz { border:2px dashed #cbd5e1; background:#f5f5f7; border-radius:16px; padding:28px 24px; display:flex;flex-direction:column;align-items:center;gap:8px; transition: all 180ms cubic-bezier(0.16,1,0.3,1) }
+  .dz-active { border-style:solid; border-color:#4f46e5; background:#eef2ff }
+  .dz-icon { color:#9ca3af }
+  .dz-active .dz-icon { color:#4f46e5 }
+  .dz-title { font-size:15px;color:#111827;font-weight:500 }
+  .dz-sub { font-size:13px;color:#6b7280 }
+  .label { font-size:12px;color:#6b7280;font-family:var(--font-mono);margin-bottom:6px }
+</style>
+</head><body>
+<div class="card-frame">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div class="label">idle</div>
+      <div class="dz">
+        <svg class="dz-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        <div class="dz-title">CSV 파일을 여기로 끌어다 놓으세요</div>
+        <div class="dz-sub">또는 <span style="color:#4f46e5;font-weight:500;text-decoration:underline;text-underline-offset:3px">파일 선택</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="label">dragover · active</div>
+      <div class="dz dz-active">
+        <svg class="dz-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        <div class="dz-title" style="color:#3730a3">놓으면 분석을 시작합니다</div>
+        <div class="dz-sub" style="color:#4338ca">.csv · UTF-8, EUC-KR</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

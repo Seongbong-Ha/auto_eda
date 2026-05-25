@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<title>Buttons</title>
+<link rel="stylesheet" href="preview.css">
+<style>
+  .btn { font-family:inherit;font-size:14px;font-weight:600;border-radius:8px;padding:10px 16px;cursor:pointer;border:1px solid transparent;transition:background 120ms ease, color 120ms ease, box-shadow 120ms ease;display:inline-flex;align-items:center;gap:8px }
+  .btn-primary { background:#4f46e5;color:#fff }
+  .btn-secondary { background:#fff;color:#111827;border-color:#d1d5db }
+  .btn-ghost { background:transparent;color:#4b5563 }
+  .row-pair { display:flex;flex-direction:column;gap:6px;align-items:flex-start }
+</style>
+</head><body>
+<div class="card-frame">
+  <div class="row" style="gap:20px;align-items:flex-start">
+    <div class="row-pair">
+      <button class="btn btn-primary">분석 시작</button>
+      <div class="token-name">primary</div>
+    </div>
+    <div class="row-pair">
+      <button class="btn btn-primary" style="background:#4338ca">분석 시작</button>
+      <div class="token-name">primary · hover</div>
+    </div>
+    <div class="row-pair">
+      <button class="btn btn-primary" style="background:#3730a3;transform:translateY(1px)">분석 시작</button>
+      <div class="token-name">primary · press</div>
+    </div>
+    <div class="row-pair">
+      <button class="btn btn-primary" style="box-shadow:0 0 0 3px rgba(79,70,229,0.32)">분석 시작</button>
+      <div class="token-name">primary · focus</div>
+    </div>
+  </div>
+  <div class="row" style="gap:20px;align-items:flex-start;margin-top:6px">
+    <div class="row-pair">
+      <button class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        MD 다운로드
+      </button>
+      <div class="token-name">secondary</div>
+    </div>
+    <div class="row-pair">
+      <button class="btn btn-secondary" style="background:#fafafa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        MD 다운로드
+      </button>
+      <div class="token-name">secondary · hover</div>
+    </div>
+    <div class="row-pair">
+      <button class="btn btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        새 파일 분석
+      </button>
+      <div class="token-name">ghost</div>
+    </div>
+  </div>
+</div>
+</body></html>
